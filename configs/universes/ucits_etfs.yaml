@@ -1,0 +1,23 @@
+# LSE-listed UCITS equivalents of us_etfs.yaml, for a possible UK live broker.
+#
+# !!! UNVERIFIED: tickers, share-class currency and accumulating/distributing status
+# !!! must be checked against the live broker's instrument list before use.
+#
+# Not every sleeve has a clean UCITS twin:
+#   - UUP (long USD index) has no close UCITS equivalent, so it is omitted.
+#   - Some lines trade in USD on the LSE even though the universe currency is GBP.
+#     FX handling is decided when (if) this universe is used live.
+name: ucits_etfs
+currency: GBP
+assets:
+  - {symbol: VUAG, name: Vanguard S&P 500 (Acc), asset_class: equity, costs: {half_spread_bps: 2.0, slippage_bps: 2.0}}       # ~SPY
+  - {symbol: EQQQ, name: Invesco EQQQ Nasdaq-100, asset_class: equity, costs: {half_spread_bps: 3.0, slippage_bps: 2.0}}      # ~QQQ
+  - {symbol: R2SC, name: SPDR Russell 2000 US Small Cap, asset_class: equity, costs: {half_spread_bps: 5.0, slippage_bps: 3.0}} # ~IWM
+  - {symbol: EXUS, name: Xtrackers MSCI World ex USA, asset_class: equity, costs: {half_spread_bps: 5.0, slippage_bps: 3.0}}   # ~EFA
+  - {symbol: EIMI, name: iShares Core MSCI EM IMI, asset_class: equity, costs: {half_spread_bps: 4.0, slippage_bps: 3.0}}      # ~EEM
+  - {symbol: IBTM, name: iShares USD Treasury 7-10y, asset_class: bond, costs: {half_spread_bps: 3.0, slippage_bps: 2.0}}      # ~IEF
+  - {symbol: IDTL, name: iShares USD Treasury 20+y, asset_class: bond, costs: {half_spread_bps: 3.0, slippage_bps: 2.0}}       # ~TLT
+  - {symbol: ITPS, name: iShares USD TIPS, asset_class: bond, costs: {half_spread_bps: 4.0, slippage_bps: 3.0}}                # ~TIP
+  - {symbol: SGLN, name: iShares Physical Gold, asset_class: commodity, costs: {half_spread_bps: 2.0, slippage_bps: 2.0}}      # ~GLD
+  - {symbol: CMOD, name: Invesco Bloomberg Commodity, asset_class: commodity, costs: {half_spread_bps: 6.0, slippage_bps: 4.0}} # ~DBC
+  - {symbol: IUSP, name: iShares US Property Yield, asset_class: real_estate, costs: {half_spread_bps: 5.0, slippage_bps: 3.0}} # ~VNQ

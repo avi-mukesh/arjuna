@@ -1,0 +1,30 @@
+# Strategy v1: multi-asset trend following with volatility targeting (docs/PLAN.md §1).
+name: trend_multi_asset
+strategy: trend_following
+universe: us_etfs            # resolved to configs/universes/us_etfs.yaml
+
+signal:
+  lookbacks: [21, 63, 126, 252]   # trading days
+  signal_type: sign               # sign | scaled
+
+vol:
+  halflife: 60       # EWMA half-life, trading days
+  min_vol: 0.05      # annualised vol floor
+
+sizing:
+  target_vol: 0.10          # annualised portfolio vol target
+  portfolio_scaling: true   # rescale to target using EWMA covariance
+
+constraints:
+  max_weight_per_asset: 0.25
+  max_gross_leverage: 1.0
+  allow_short: false        # long/flat: works in a cash account, no margin
+
+rebalance:
+  frequency: weekly         # signal on the last trading day of the week
+  band: 0.02                # no-trade band (fraction of NAV)
+
+backtest:
+  start: 2008-01-01
+  end: null                 # null = latest available
+  initial_capital: 100000

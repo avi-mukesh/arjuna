@@ -1,0 +1,10 @@
+env: backtest
+broker: sim
+live:
+  enabled: false
+risk:
+  max_order_notional: 1.0e12   # effectively unbounded: backtests are sized by the strategy
+  max_daily_turnover: 1.0
+  initial_deployment_max_turnover: 1.0   # one-off build from cash only (ADR 0002)
+  max_gross_leverage: 1.0
+  reconcile_tolerance: 0.01

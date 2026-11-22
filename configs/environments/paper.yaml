@@ -1,0 +1,10 @@
+env: paper
+broker: alpaca_paper
+live:
+  enabled: false
+risk:
+  max_order_notional: 25000    # account currency; Alpaca paper starts at $100k
+  max_daily_turnover: 0.5      # fraction of NAV traded per day
+  initial_deployment_max_turnover: 1.0   # one-off build from cash only (ADR 0002)
+  max_gross_leverage: 1.0
+  reconcile_tolerance: 0.01    # per-asset weight difference before halting
