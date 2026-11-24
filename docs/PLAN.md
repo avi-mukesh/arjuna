@@ -93,7 +93,7 @@ Pages:
 | Phase | Deliverable | Done when |
 |---|---|---|
 | 0 | Scaffold: uv, ruff, mypy, pytest, CI, config schema + loader | `uv run pytest` passes in CI |
-| 1 | Data layer: Alpaca daily bars, Parquet cache, trading calendar | Cached history for the universe; calendar tests pass |
+| 1 | Data layer: Tiingo daily bars (raw + dividends/splits, ADR 0004), Parquet cache, trading calendar | Cached history for the universe; calendar tests pass |
 | 2 | Signals, vol, sizing, strategy, backtest engine, costs, metrics, CLI | `arjuna backtest` prints a report; no-lookahead test passes |
 | 3 | Research: sweep, walk-forward, trial ledger, DSR | Sweep heatmap and walk-forward OOS report produced |
 | 4 | Broker interface, SimBroker, Alpaca paper adapter, order planner, risk checks, local runner | `arjuna run --env paper --dry-run` prints sensible orders |

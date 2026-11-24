@@ -23,7 +23,7 @@ The full spec and phased roadmap are in `docs/PLAN.md`. Read it before starting 
 1. **No real-money orders without explicit human approval.** Live mode needs *all* of the following: `ARJUNA_ENV=live`, the `--confirm-live` CLI flag, and `live.enabled: true` in `configs/environments/live.yaml`. Never set any of these yourself.
 2. **Never weaken risk limits** (`src/arjuna/risk/limits.py` or `risk:` blocks in configs) unless Avi asks for it in this session.
 3. **Secrets:** never commit them, print them or log them. Locally they live in `.env`, which is gitignored; `.env.example` holds placeholders only. On AWS they live in Secrets Manager.
-4. **Tests never touch a real broker.** Unit tests use `SimBroker`. Integration tests against Alpaca *paper* are marked `@pytest.mark.paper` and are skipped by default.
+4. **Tests never touch a real broker.** Unit tests use `SimBroker`. Integration tests against Alpaca *paper* are marked `@pytest.mark.paper`, and tests that call a real data API (Tiingo) are marked `@pytest.mark.network`. Both are skipped by default.
 5. **Kill switch:** every order path must check `risk.kill_switch.is_engaged()` before submitting. If the check fails or errors, no order is sent (fail closed).
 6. The live runner must **reconcile** broker positions against expected positions before trading. If they differ by more than tolerance, it halts and alerts; it never "fixes" positions on its own.
 
@@ -68,7 +68,7 @@ arjuna/
 ├── src/arjuna/
 │   ├── cli.py                   # `arjuna backtest|sweep|walkforward|run|status`
 │   ├── config/                  # schema.py (Pydantic models), loader.py (YAML → models, config hashing)
-│   ├── data/                    # provider.py (interface), alpaca.py, cache.py (Parquet), calendar.py
+│   ├── data/                    # provider.py (interface), tiingo.py, cache.py (Parquet), calendar.py, returns.py
 │   ├── signals/                 # momentum.py, volatility.py (EWMA), base.py
 │   ├── strategies/              # base.py (Strategy protocol), trend_following.py, registry.py
 │   ├── portfolio/               # sizing.py (vol targeting), constraints.py (caps, leverage, long-only)
@@ -97,7 +97,7 @@ arjuna/
 
 ## Tech stack
 
-- **Python 3.12**, managed with `uv`. Libraries: `pandas`, `numpy`, `pydantic` v2, `pyyaml`, `alpaca-py`, `exchange_calendars` (or `pandas_market_calendars`), `fastapi`, `mangum`, `boto3`, `typer`, `structlog`.
+- **Python 3.12**, managed with `uv`. Libraries: `pandas`, `numpy`, `pydantic` v2, `pyyaml`, `alpaca-py` (broker), `httpx` (Tiingo data, ADR 0004), `pyarrow`, `exchange_calendars`, `fastapi`, `mangum`, `boto3`, `typer`, `structlog`.
 - Dev tooling: `pytest`, `hypothesis` (property tests), `ruff`, `mypy --strict` on `src/`.
 - **Frontend:** Vite + React + TS, TradingView `lightweight-charts` for equity curves. Keep it light: no state-management library and no component framework beyond something minimal.
 - **Infra:** AWS CDK in Python. **Cost target is under $5/month:** no NAT gateways, no RDS, no always-on containers.
@@ -108,6 +108,9 @@ arjuna/
 uv sync                                   # install deps from lockfile
 uv run pytest                             # run tests (paper-marked tests skipped)
 uv run pytest -m paper                    # run Alpaca paper integration tests
+uv run --env-file .env pytest -m network  # run real Tiingo data tests
+uv run --env-file .env arjuna data update configs/strategies/trend_multi_asset.yaml
+uv run arjuna data status configs/strategies/trend_multi_asset.yaml
 uv run ruff check . && uv run ruff format .
 uv run mypy src
 uv run arjuna backtest configs/strategies/trend_multi_asset.yaml

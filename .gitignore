@@ -18,8 +18,8 @@ dist/
 htmlcov/
 
 # Data and run outputs (cached in S3 / local, never committed)
-data/
-reports/
+/data/
+/reports/
 *.parquet
 
 # Frontend / infra
